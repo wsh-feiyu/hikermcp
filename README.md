@@ -58,22 +58,37 @@ npm install
 
 ## 配置
 
-编辑 `config/mcp.json`（不存在则复制 `config/mcp.example.json`）：
+### 1. 服务运行配置 `config/mcp.json`
+
+本项目唯一的运行配置文件，控制如何连接你的海阔视界 App。
+不存在时复制 `config/mcp.example.json` 为 `config/mcp.json` 后编辑：
 
 ```json
 {
   "hosts": ["192.168.1.100", "192.168.1.[50-249]"],
   "port": 52020,
-  "timeout": 10000
+  "timeout": 10000,
+  "scanConcurrency": 20
 }
 ```
+
+| 字段 | 说明 |
+|------|------|
+| `hosts` | 海阔视界 App 的地址列表，支持三种格式（见下），启动时自动探测第一个可用的 |
+| `port` | App 监听端口（海阔视界默认 **52020**） |
+| `timeout` | 请求超时（毫秒），默认 10000 |
+| `scanConcurrency` | 探测 IP 段时的并发数，默认 20 |
 
 `hosts` 支持三种格式：
 - 精确 IP：`192.168.1.100`
 - IP 段：`192.168.1.[50-249]`
 - 通配符：`192.168.1.*`
 
-启动时会自动探测可用地址。
+不配置 `config/mcp.json` 时使用默认值 `["192.168.1.100"]:52020`。
+
+> ⚠️ 注意：`config/mcp.json` 是**本服务运行配置**；`claude_desktop_config.json` 是
+> **MCP 客户端接入配置**（见下方「接入 MCP 客户端」），两者不是同一个文件。
+> `config/mcp.json` 含你的局域网信息，已加入 .gitignore 不会提交。
 
 ## 使用
 
@@ -202,7 +217,7 @@ hiker-mcp/
 │       └── format.js     # 格式化与校验
 ├── docs/                 # 官方帮助手册整合、写源模板手册、青豆框架文档与 hiker.d.ts
 ├── test/                 # 测试（stdio + HTTP 双模式）
-└── config/               # 配置文件
+└── config/               # 运行配置（mcp.json 实际配置 / mcp.example.json 示例模板，mcp.json 不提交）
 ```
 
 ## 与浏览器插件的关系

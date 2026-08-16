@@ -1,9 +1,6 @@
 {
-  "mcpServers": {
-    "hiker-mcp": {
-      "command": "node",
-      "args": ["/绝对路径/hiker-mcp/src/index.js"],
-      "env": {}
-    }
-  }
+  "hosts": ["192.168.1.100", "192.168.1.[50-249]"],
+  "port": 52020,
+  "timeout": 10000,
+  "scanConcurrency": 20
 }
