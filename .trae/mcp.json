@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "hiker-mcp": {
+      "description": "海阔视界规则编辑器 - 让 AI 直接读写海阔视界 App 的规则与 JS 插件",
+      "command": "node",
+      "args": ["/workspace/hiker-mcp/src/index.js"],
+      "env": {
+        "START_MCP_TIMEOUT_MS": "30000",
+        "RUN_MCP_TIMEOUT_MS": "60000"
+      }
+    }
+  }
+}

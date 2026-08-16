@@ -1,0 +1,37 @@
+{
+  "name": "hiker-mcp",
+  "version": "0.1.0",
+  "description": "海阔视界规则编辑器 MCP Server：让 AI 助手直接读写海阔视界 App 的规则与 JS 插件",
+  "type": "module",
+  "main": "src/index.js",
+  "bin": {
+    "hiker-mcp": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js --http --lan",
+    "stdio": "node src/index.js",
+    "serve": "node src/index.js --http --lan",
+    "tunnel": "node src/index.js --http --lan --tunnel",
+    "tunnel:cloudflared": "node src/index.js --http --lan --tunnel cloudflared",
+    "dev": "node --watch src/index.js",
+    "scan": "node src/scan.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "mcp",
+    "hiker",
+    "海阔视界",
+    "rule",
+    "model-context-protocol"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0",
+    "acorn": "^8.12.0",
+    "prettier": "^3.3.0",
+    "zod": "^4.4.3"
+  }
+}

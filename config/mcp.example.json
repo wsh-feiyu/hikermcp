@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "hiker-mcp": {
+      "command": "node",
+      "args": ["/绝对路径/hiker-mcp/src/index.js"],
+      "env": {}
+    }
+  }
+}
