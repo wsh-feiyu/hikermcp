@@ -16,9 +16,9 @@
 | `get_js_plugin` | 获取 JS 插件代码 |
 | `save_js_plugin` | 保存 JS 插件 |
 | `format_js_code` | 格式化 JS 插件代码 |
-| `list_examples` | 列出内置示例规则 |
-| `get_example_rule` | 读取示例规则（可指定子页面） |
-| `get_rule_docs` | 读取规则编写文档（blueprint 模板手册 / guide 写源说明 等） |
+| `list_examples` | 列出内置示例规则（examples/ 目录可选，缺失时返回提示） |
+| `get_example_rule` | 读取示例规则（可指定子页面；examples/ 目录缺失时返回提示） |
+| `get_rule_docs` | 读取规则编写文档（hiker-help 官方手册 / blueprint 模板手册 等） |
 | `get_connection_status` | 查看当前连接状态 |
 
 ### 官方文档体系（写源参考顺序）
@@ -40,9 +40,10 @@
 - `hiker://docs/qingdou-skill` — 青豆 SKILL 文档（仅写青豆规则时参考）
 - `hiker://docs/suggestions` — 代码片段建议
 - `hiker://docs/hiker-dts` — 海阔视界 API 类型声明
-- `hiker://examples/河马影视` 等 — 内置示例规则
 - `hiker://docs/source-formats` — 基于 361 真实规则分析的原生源格式参考
 - `hiker://docs/save-format` — 「一行大 JSON」导入与 pageList↔pages 转化详解
+
+> 本项目不内置示例规则（examples/ 目录可选）。写源参考已由「官方帮助手册 + 写源模板手册」完整覆盖，可直接让 AI 按模板生成。
 
 ### Prompts（提示词）
 - `create_rule` — 引导 AI 编写新规则（强制先读官方帮助手册 + 模板手册，再照抄模板）
@@ -197,9 +198,8 @@ hiker-mcp/
 │   └── tools/
 │       ├── rules.js      # 规则工具
 │       ├── js-plugins.js # JS 插件工具
-│       ├── examples.js   # 示例规则与文档工具
+│       ├── examples.js   # 示例与文档工具（examples/ 目录可选，缺失自动容错）
 │       └── format.js     # 格式化与校验
-├── examples/             # 内置示例规则（可选，目录可缺失）
 ├── docs/                 # 官方帮助手册整合、写源模板手册、青豆框架文档与 hiker.d.ts
 ├── test/                 # 测试（stdio + HTTP 双模式）
 └── config/               # 配置文件

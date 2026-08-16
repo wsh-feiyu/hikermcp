@@ -36,7 +36,7 @@ export function registerExampleTools(server) {
   // 列出内置示例规则
   server.tool(
     'list_examples',
-    '列出内置的海阔视界示例规则（河马影视/云帧享/聚阅/青豆剧场），供 AI 学习规则结构；未放置示例时返回空',
+    '列出内置的海阔视界示例规则（examples/ 目录可选；目录缺失/为空时返回提示）。写源参考请用 get_rule_docs（hiker-help / blueprint）',
     {},
     async () => {
       const files = listExampleFiles();
@@ -70,10 +70,10 @@ export function registerExampleTools(server) {
   // 读取示例规则
   server.tool(
     'get_example_rule',
-    '读取内置示例规则的完整内容。可指定只读取某个子页面（pages 中的 path）以节省上下文',
+    '读取内置示例规则的完整内容（examples/ 目录可选，缺失时返回提示）。可指定只读取某个子页面（pages 中的 path）以节省上下文',
     {
-      name: z.string().describe('示例规则名：河马影视 / 云帧享 / 聚阅 / 青豆剧场_精简'),
-      page: z.string().optional().describe('可选。只返回 pages 中指定 path 的页面代码，如 "hmhome"、"tools"、"erji"、"function"'),
+      name: z.string().describe('示例规则名（examples/*.json 文件名）'),
+      page: z.string().optional().describe('可选。只返回 pages 中指定 path/name 的页面代码'),
       includePages: z.boolean().optional().describe('可选。是否包含全部 pages（默认 true；巨型规则建议设为 false 只看顶层结构）'),
     },
     async ({ name, page, includePages = true }) => {
