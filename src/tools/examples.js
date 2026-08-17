@@ -27,7 +27,7 @@ export function registerExampleTools(server) {
     'get_rule_docs',
     '获取海阔视界规则编写文档，帮助编写合规规则',
     {
-      doc: z.string().optional().describe('文档名：hiker-help(官方帮助手册：JS API/链接协议/选择器/col_type/标识/网页桥接，通用标准) / blueprint(写源模板手册，AI写源必读) / video-template(视频源写源模板，模块化框架含多线路选集，复杂视频源专用) / qingdou-guide(青豆框架编写指南，仅写青豆规则时参考) / qingdou-skill(青豆SKILL，仅写青豆规则时参考) / hiker-dts(API类型声明) / source-formats(原生源格式参考) / save-format(一行大JSON导入转化详解) / suggestions(代码片段建议)'),
+      doc: z.string().optional().describe('文档名：hiker-help(官方帮助手册：JS API/链接协议/选择器/col_type/标识/网页桥接，通用标准) / blueprint(写源模板手册，AI写源必读) / video-template(视频源写源模板：模块化框架，★写视频源/视频小程序优先使用) / qingdou-guide(青豆框架编写指南，仅写青豆规则时参考) / qingdou-skill(青豆SKILL，仅写青豆规则时参考) / hiker-dts(API类型声明) / source-formats(原生源格式参考) / save-format(一行大JSON导入转化详解) / suggestions(代码片段建议)'),
     },
     async ({ doc = 'hiker-help' }) => {
       const map = {
