@@ -87,7 +87,7 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     const expected = [
       'list_rules', 'get_rule', 'save_rule', 'validate_rule', 'format_rule_code',
       'list_js_plugins', 'get_js_plugin', 'save_js_plugin', 'format_js_code',
-      'get_rule_docs', 'get_connection_status', 'share_rule_paste',
+      'get_rule_docs', 'get_connection_status', 'export_rule_json',
     ];
     for (const name of expected) {
       assert.ok(names.includes(name), `工具 ${name} 应存在`);
@@ -95,6 +95,7 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     assert.equal(names.length, expected.length, '工具数量应精确匹配');
     assert.ok(!names.includes('list_examples'), '示例工具已移除');
     assert.ok(!names.includes('get_example_rule'), '示例工具已移除');
+    assert.ok(!names.includes('share_rule_paste'), '云剪贴板工具已停用（注释）');
 
     // 3. 列出资源
     const res = await client.request('resources/list');
@@ -157,6 +158,25 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
       arguments: { rule: { title: '坏规则', find_rule: 'js:var x = ;' } },
     });
     assert.ok(vr2.result.content[0].text.includes('校验未通过'), '坏规则应校验失败');
+
+    // 8. 导出规则为 JSON（未连接 App 时用）
+    const exJson = await client.request('tools/call', {
+      name: 'export_rule_json',
+      arguments: {
+        rule: {
+          title: '导出测试',
+          type: 'video',
+          find_rule: 'js:setResult([]);',
+          pages: [{ name: '主页', path: 'home', rule: '//js:setResult([]);' }],
+        },
+      },
+    });
+    const exText = exJson.result.content[0].text;
+    assert.ok(exText.includes('已导出为 JSON'), '应提示导出成功');
+    assert.ok(exText.includes('方式一：复制粘贴导入'), '应含粘贴导入方式');
+    assert.ok(exText.includes('方式二：保存为 .json 文件'), '应含保存文件方式');
+    assert.ok(exText.includes('"pages"'), '应包含 pages 字段');
+    assert.ok(!exText.includes('"pageList"'), '导出不应包含 pageList');
 
     console.log('所有测试通过！');
   } finally {
