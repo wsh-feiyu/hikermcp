@@ -46,7 +46,7 @@ export function registerRuleTools(server) {
     'get_rule',
     '获取指定标题的规则完整内容（JSON 格式，含 pages 子页面）',
     {
-      title: z.string().describe('规则标题，如 "河马影视"'),
+      title: z.string().describe('规则标题，如 "某某影视"'),
     },
     async ({ title }) => {
       try {
