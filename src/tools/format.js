@@ -62,6 +62,13 @@ export function validateJsSyntax(code) {
 }
 
 /**
+ * 官方 type 枚举（与 hiker.d.ts 的 type 定义、App 内置开发者手册一致）。
+ * 来源：docs/hiker.d.ts —— type TYPE<['all','video','music','live','cartoon','read','picture','news','tool','other']>
+ * 修改时必须与 hiker.d.ts 同步，防止漂移。
+ */
+export const RULE_TYPES = ['all', 'video', 'music', 'live', 'cartoon', 'read', 'picture', 'news', 'tool', 'other'];
+
+/**
  * 校验规则 JSON 结构（顶层字段 + pages 字段）
  * @returns {{ok: boolean, errors: string[]}}
  */
@@ -71,8 +78,8 @@ export function validateRuleJson(rule) {
     return { ok: false, errors: ['规则不是有效对象'] };
   }
   if (!rule.title) errors.push('缺少必填字段 title');
-  if (rule.type && !['video', 'all', 'live', 'image', 'audio'].includes(rule.type)) {
-    errors.push(`type 字段值异常: ${rule.type}`);
+  if (rule.type && !RULE_TYPES.includes(rule.type)) {
+    errors.push(`type 字段值异常: ${rule.type}（合法值: ${RULE_TYPES.join('/')}）`);
   }
   if (rule.pages !== undefined) {
     if (typeof rule.pages === 'string') {

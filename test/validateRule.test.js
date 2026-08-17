@@ -4,6 +4,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { validateRule } from '../src/tools/validateRule.js';
+import { RULE_TYPES } from '../src/tools/format.js';
 
 test('validateRule 简单合法规则应通过', async () => {
   const r = await validateRule({
@@ -16,6 +17,39 @@ test('validateRule 简单合法规则应通过', async () => {
   assert.equal(r.ok, true);
   assert.ok(r.bodyLength > 0);
   assert.equal(r.errors.length, 0);
+});
+
+// ★ 回归测试：官方 10 个 type 值必须全部放行（曾误拒 music/cartoon/read/picture/news/tool/other）
+test('validateRule 官方 10 个 type 值全部应通过', async () => {
+  const official = ['all', 'video', 'music', 'live', 'cartoon', 'read', 'picture', 'news', 'tool', 'other'];
+  assert.deepEqual(RULE_TYPES, official, 'RULE_TYPES 应与官方 hiker.d.ts 枚举一致');
+  for (const type of official) {
+    const r = await validateRule({
+      rule: {
+        title: `测试-${type}`,
+        type,
+        version: 1,
+        url: 'https://example.com',
+        col_type: 'movie_3',
+        detail_col_type: 'movie_1',
+        find_rule: 'js:var d=[];setResult(d);',
+      },
+    });
+    assert.equal(r.ok, true, `type="${type}" 应校验通过，实际错误: ${r.errors.join('; ')}`);
+    assert.ok(!r.errors.some((e) => e.includes('type 字段值异常')), `type="${type}" 不应报 type 异常`);
+  }
+});
+
+test('validateRule 非法 type 值应报 type 字段值异常', async () => {
+  const r = await validateRule({
+    rule: {
+      title: '测试规则',
+      type: 'image', // 官方无 image 类型（官方为 picture）
+      find_rule: 'js:setResult([]);',
+    },
+  });
+  assert.equal(r.ok, false);
+  assert.ok(r.errors.some((e) => e.includes('type 字段值异常')), '非法 type 应被拦截');
 });
 
 test('validateRule 含 pageList 应通过', async () => {

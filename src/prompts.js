@@ -22,7 +22,7 @@ export function registerPrompts(server) {
 | 字段 | 类型 | 说明 |
 |------|------|------|
 | title | string | 规则标题，必填 |
-| type | string | 规则类型：video/all/live/image/audio |
+| type | string | 规则类型：all/video/music/live/cartoon/read/picture/news/tool/other |
 | author | string | 作者 |
 | version | number | 版本号 |
 | group | string | 分组标签 |

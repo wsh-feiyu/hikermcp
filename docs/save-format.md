@@ -30,7 +30,7 @@ MCP 链路里处理的是**单规则**形态；`get_rule` 返回的落库对象�
 ```jsonc
 {
   "title": "读漫屋",                    // 规则名（App 列表展示）
-  "type": "video",                      // video / all / live
+  "type": "video",                      // all/video/music/live/cartoon/read/picture/news/tool/other
   "author": "AI",
   "version": 20260816,
   "url": "hiker://empty?page=fypage",   // 主页入口，缺失 → 纯搜索

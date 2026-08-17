@@ -40,7 +40,7 @@
   "title": "规则名称",            // 规则名（App 列表展示）
   "author": "作者",              // 作者名
   "version": 1,                  // 版本号（数字）
-  "type": "video",               // 源类型：video / all / live
+  "type": "video",               // all/video/music/live/cartoon/read/picture/news/tool/other
   "group": "①影视",             // 分组（App 侧边栏分类）
 
   // ---- 主页入口（必填，缺失 → 纯搜索）----
