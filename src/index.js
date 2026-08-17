@@ -8,6 +8,7 @@ import { discoverHost, getCurrentHost } from './hiker-api.js';
 import { registerRuleTools } from './tools/rules.js';
 import { registerJsPluginTools } from './tools/js-plugins.js';
 import { registerExampleTools } from './tools/examples.js';
+import { registerPasteShareTools } from './tools/paste-share.js';
 import { registerResources } from './resources.js';
 import { registerPrompts } from './prompts.js';
 import { formatAccessUrls } from './net-utils.js';
@@ -38,6 +39,7 @@ function createMcpServer() {
   registerRuleTools(server);
   registerJsPluginTools(server);
   registerExampleTools(server);
+  registerPasteShareTools(server);
 
   // 注册资源与提示词
   registerResources(server);

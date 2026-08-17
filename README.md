@@ -18,6 +18,7 @@
 | `format_js_code` | 格式化 JS 插件代码 |
 | `get_rule_docs` | 读取规则编写文档（hiker-help 官方手册 / blueprint 模板手册 / video-template 视频源模板 等） |
 | `get_connection_status` | 查看当前连接状态 |
+| `share_rule_paste` | 未连接 App 时，把规则发送到云剪贴板（pasteme.tyrantg.com），返回 `云6oooole/xxxxxx/{path}` 分享链接，复制到手机即可导入 |
 
 ### 官方文档体系（写源参考顺序）
 | 文档 | get_rule_docs 选项 | 用途 |
@@ -112,6 +113,20 @@ node src/scan.js 192.168.1.[50-249]
   }
 }
 ```
+
+### 未连接 App 时分享规则（云剪贴板）
+
+未连接手机 App 时，写好的源可用 `share_rule_paste` 发送到云剪贴板
+（[pasteme.tyrantg.com](https://pasteme.tyrantg.com)），返回可导入的分享链接：
+
+```
+📋 分享链接（复制到海阔视界 App 即可导入）：
+云6oooole/xxxxxx/hvk5wcbi7hmsuc6n
+🌐 网页格式：https://pasteme.tyrantg.com/xxxxxx/hvk5wcbi7hmsuc6n
+```
+
+规则自动打包成海阔口令 `海阔视界规则分享，当前分享的是：小程序￥home_rule_v2￥base64://@规则名@base64(JSON)`
+后上传；链接为公开内容（无密码），请勿分享隐私数据。
 
 ### 局域网模式（显示内网地址）
 

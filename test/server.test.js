@@ -87,7 +87,7 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     const expected = [
       'list_rules', 'get_rule', 'save_rule', 'validate_rule', 'format_rule_code',
       'list_js_plugins', 'get_js_plugin', 'save_js_plugin', 'format_js_code',
-      'get_rule_docs', 'get_connection_status',
+      'get_rule_docs', 'get_connection_status', 'share_rule_paste',
     ];
     for (const name of expected) {
       assert.ok(names.includes(name), `工具 ${name} 应存在`);

@@ -114,7 +114,7 @@ test('Streamable HTTP 模式完整会话测试', { timeout: 15000 }, async () =>
       init.sessionId
     );
     const toolsMsg = parseData(tools.text);
-    assert.ok(toolsMsg.result.tools.length >= 11, '应列出全部工具');
+    assert.ok(toolsMsg.result.tools.length >= 12, '应列出全部工具');
     assert.ok(!toolsMsg.result.tools.some((t) => t.name === 'list_examples'), '示例工具已移除');
 
     // 4. tools/call: get_rule_docs（官方帮助手册）
