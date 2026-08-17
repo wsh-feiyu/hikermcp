@@ -74,10 +74,10 @@ export function registerRuleTools(server) {
   // 保存规则
   server.tool(
     'save_rule',
-    '保存规则到海阔视界 App。入参 rule 传 pageList(子页面数组) 即可，服务端自动补齐 pages 字符串并正确序列化提交；保存失败会返回 App 的具体错误信息。注意：保存前会自动校验并拦截「纯搜索小程序」问题（子页面 rule 为空、缺 //js: 前缀、被引用模块缺 $.exports 导出等）',
+    '保存规则到海阔视界 App。子页面统一用 pages 字段（数组或 JSON 字符串均可，保存时自动序列化为字符串提交，与 App 落库一致）；兼容旧写法 pageList（数组）。保存失败会返回 App 的具体错误信息。注意：保存前会自动校验并拦截「纯搜索小程序」问题（子页面 rule 为空、缺 //js: 前缀、被引用模块缺 $.exports 导出等）',
     {
       rule: z.record(z.any()).describe(
-        '完整规则对象。必填字段：title, url, col_type, detail_col_type, find_rule。搜索源需 search_url, searchFind。pageList(子页面数组，每项含 name/path/col_type/rule)。子页面 rule 必须非空且以 //js: 开头；被 $.require 引用的模块页必须有 $.exports 导出。主页源若缺 url 或 col_type 或 find_rule 会导致 App 显示「纯搜索小程序」'
+        '完整规则对象。必填字段：title, url, col_type, detail_col_type, find_rule。搜索源需 search_url, searchFind。pages(子页面：数组或 JSON 字符串，每项含 name/path/col_type/rule；旧写法 pageList 数组也兼容)。子页面 rule 必须非空且以 //js: 开头；被 $.require 引用的模块页必须有 $.exports 导出。主页源若缺 url 或 col_type 或 find_rule 会导致 App 显示「纯搜索小程序」'
       ),
       validate: z.boolean().optional().describe('保存前是否校验（默认 true），校验会拦截模块缺失、导出缺失、rule 为空等不可用规则'),
     },

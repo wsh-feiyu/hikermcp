@@ -296,8 +296,8 @@ type rule = {
   searchFind: string;
   sdetail_col_type: col_type;
   sdetail_find_rule: string;
-  pageList: page[];
-  pages: page[];
+  /** 子页面（App 落库为 JSON 字符串；写源时可传数组） */
+  pages: string | page[];
 };
 
 /**

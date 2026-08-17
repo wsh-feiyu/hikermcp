@@ -16,12 +16,14 @@ test('buildRulePasteText：生成标准海阔口令，base64 可解码回原 JSO
   const text = buildRulePasteText(rule);
   // 前缀与格式
   assert.ok(text.startsWith('海阔视界规则分享，当前分享的是：小程序￥home_rule_v2￥base64://@测试源@'), '口令格式错误');
-  // base64 部分可解码回规则 JSON（含 normalizeRule 补的 pages）
+  // base64 部分可解码回规则 JSON（normalizeRule 统一输出 pages 字符串）
   const b64 = text.split('@测试源@')[1];
   const decoded = JSON.parse(Buffer.from(b64, 'base64').toString('utf-8'));
   assert.equal(decoded.title, '测试源');
-  assert.equal(decoded.pageList.length, 1);
-  assert.ok(decoded.pages, 'normalizeRule 应补齐 pages');
+  assert.ok(decoded.pages, 'normalizeRule 应输出 pages 字符串');
+  const pages = JSON.parse(decoded.pages);
+  assert.equal(pages.length, 1);
+  assert.equal(pages[0].name, '主页');
 });
 
 test('buildRulePasteText：自定义 name 覆盖 rule.title', () => {

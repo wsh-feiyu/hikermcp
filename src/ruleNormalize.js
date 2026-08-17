@@ -1,27 +1,58 @@
 /**
- * 规则对象规范化：保证 pageList（数组）与 pages（JSON 字符串）双向映射同时存在。
+ * 规则对象规范化：子页面字段统一以 `pages` 为准（JSON 字符串，与 App 落库一致）。
  *
- * 海阔视界 App 要求：
- * - 保存时需同时接收 pageList（数组）和 pages（字符串），否则子页面丢失
- * - 读取时 pageList 可能为空，需要从 pages 字符串反解
+ * 说明（2026-08 修订）：
+ * - 海阔视界 App 落库字段就是 `pages`（字符串，articlelistrule.pages），规则对象里
+ *   不需要 `pageList` 字段
+ * - MCP 输入兼容旧写法：规则里写 `pageList`（数组）会被自动转成 `pages` 字符串后输出
+ * - 输出对象**不再包含 pageList**，统一为 pages 字符串（避免 App 端字段歧义）
+ */
+
+/**
+ * 解析子页面字段为数组（兼容字符串与数组输入）。
+ * @param {string|Array} pages pages 字段（JSON 字符串或数组）
+ * @returns {Array<object>}
+ */
+export function parsePages(pages) {
+  if (!pages) return [];
+  if (Array.isArray(pages)) return pages;
+  try {
+    const v = JSON.parse(pages);
+    return Array.isArray(v) ? v : [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * 规则对象规范化：输出统一含 pages（JSON 字符串），不含 pageList。
+ *
+ * 输入兼容：
+ *   - rule.pages 为字符串 → 原样保留（已是落库形态）
+ *   - rule.pages 为数组   → 序列化为字符串
+ *   - rule.pageList 为数组（旧写法）→ 序列化为 pages 字符串
+ *   - 两者皆无 → pages = '[]'
+ *
+ * @param {object} rule 规则对象
+ * @returns {object} 规范化后的规则（含 pages 字符串，不含 pageList）
  */
 export function normalizeRule(rule) {
   const r = { ...rule };
 
-  if (Array.isArray(r.pageList) && r.pageList.length) {
-    // 数组 → 补 pages 字符串
-    r.pages = JSON.stringify(r.pageList);
-  } else if (typeof r.pages === 'string' && r.pages) {
-    // 字符串 → 反向补 pageList
-    try {
-      r.pageList = JSON.parse(r.pages);
-    } catch {
-      r.pageList = [];
-    }
+  // 优先使用 pages：字符串原样保留，数组转字符串
+  if (typeof r.pages === 'string') {
+    if (!r.pages) r.pages = '[]';
+  } else if (Array.isArray(r.pages)) {
+    r.pages = r.pages.length ? JSON.stringify(r.pages) : '[]';
+  } else if (Array.isArray(r.pageList)) {
+    // 旧写法兼容：pageList 数组 → pages 字符串
+    r.pages = r.pageList.length ? JSON.stringify(r.pageList) : '[]';
   } else {
-    r.pageList = r.pageList || [];
-    r.pages = r.pages || '[]';
+    r.pages = '[]';
   }
+
+  // ★ 统一以 pages 为准，输出不含 pageList（App 落库不识别该字段）
+  delete r.pageList;
 
   return r;
 }
@@ -42,16 +73,16 @@ function collectRequireRefs(code, set) {
  * [修复7] 落库前强校验：防止「保存成功但规则不可用」。
  *
  * 检查项：
- * 1. 所有被 $.require('X') 引用的模块必须存在于 pageList
+ * 1. 所有被 $.require('X') 引用的模块必须存在于 pages
  * 2. 每个子页面 rule 非空且以 //js: 开头
  * 3. 被 $.require 引用的模块页必须有 $.exports 导出
  * 4. 壳页面（无 $.exports）不强制导出，避免误报
  *
- * @param {object} normalized - 经 normalizeRule 处理后的规则对象
+ * @param {object} normalized - 经 normalizeRule 处理后的规则对象（含 pages 字符串）
  * @throws {Error} 当校验不通过时抛出详细错误信息
  */
 export function assertUsableRule(normalized) {
-  const pages = normalized.pageList || [];
+  const pages = parsePages(normalized.pages);
   const pathMap = {};
   for (const p of pages) pathMap[p.path] = p;
 
@@ -66,10 +97,10 @@ export function assertUsableRule(normalized) {
   for (const s of scripts) collectRequireRefs(s, required);
   for (const p of pages) collectRequireRefs(p.rule, required);
 
-  // 2) 每个被引用模块必须存在于 pageList
+  // 2) 每个被引用模块必须存在于 pages
   for (const name of required) {
     if (!pathMap[name]) {
-      throw new Error(`引用了未定义模块「${name}」，请将其加入 pageList 或修正 $.require 引用`);
+      throw new Error(`引用了未定义模块「${name}」，请将其加入 pages 或修正 $.require 引用`);
     }
   }
 

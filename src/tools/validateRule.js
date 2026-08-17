@@ -72,20 +72,20 @@ function checkSubmissionWarnings(rule) {
 export async function validateRule({ rule }) {
   const errors = [];
 
-  // 1) 结构校验
-  const jr = validateRuleJson(rule);
+  // 先规范化：统一为含 pages 字符串的形态（pageList 输入自动转 pages；输出无 pageList）
+  const normalized = normalizeRule(rule);
+
+  // 1) 结构校验（基于规范化对象，保证 pageList 旧写法也能被正确检查）
+  const jr = validateRuleJson(normalized);
   if (!jr.ok) {
     errors.push(...jr.errors);
   } else {
     // 2) 代码语法校验（仅结构通过后才做，避免无意义报错）
-    const cr = validateRuleCode(rule);
+    const cr = validateRuleCode(normalized);
     if (!cr.ok) {
       errors.push(...cr.errors);
     }
   }
-
-  // 先规范化，后面的强校验和序列化干跑都在规范化后的对象上操作
-  const normalized = normalizeRule(rule);
 
   // 2.5) 软警告：返回结果提交方式检查（不阻塞，仅提示）
   const warnings = checkSubmissionWarnings(normalized);

@@ -73,7 +73,7 @@ export function registerResources(server) {
     {
       uri: 'hiker://docs/save-format',
       name: '规则「一行大 JSON」导入与转化详解',
-      description: 'pageList ↔ pages 双向转化规则、子页面 rule 规范（//js: 前缀 + $.exports 导出）、主页源必填字段、两种保存通道（MCP save_rule vs curl 直连 App）的入参差异、常见问题排查',
+      description: 'pages 子页面规范（//js: 前缀 + $.exports 导出）、一行大 JSON 导入与转化、主页源必填字段、两种保存通道（MCP save_rule vs curl 直连 App）的入参差异、常见问题排查',
       file: 'save-format.md',
       mime: 'text/markdown',
     },

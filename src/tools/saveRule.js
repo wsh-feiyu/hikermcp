@@ -5,7 +5,7 @@
  *
  * 与旧的 hiker-api.js saveRule 不同：
  * - 使用 postToApp（JSON content-type）而非 form-urlencoded
- * - 使用 normalizeRule 确保 pageList/pages 双向映射
+ * - 使用 normalizeRule 统一为 pages（字符串）形态提交，兼容旧 pageList 输入
  * - 可选前置校验（validate=true），与 save 共用同一序列化基线
  */
 

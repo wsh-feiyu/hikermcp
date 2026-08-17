@@ -31,7 +31,7 @@
 | 青豆框架指南 | `qingdou-guide` | ★ 仅写青豆规则（var Rule 风格）时参考 |
 | 青豆 SKILL | `qingdou-skill` | ★ 仅写青豆规则时参考 |
 | 代码片段建议 | `suggestions` | 编辑器内置补全建议 |
-| 一行大 JSON 详解 | `save-format` | pageList↔pages 转化与导入 |
+| 一行大 JSON 详解 | `save-format` | pages（子页面）序列化与导入转化 |
 
 ### Resources（资源，AI 按需读取）
 - `hiker://docs/hiker-help` — **官方帮助手册**（App 内置开发者手册整合：JS API/链接协议/选择器/col_type/标识/网页桥接）
@@ -42,7 +42,7 @@
 - `hiker://docs/suggestions` — 代码片段建议
 - `hiker://docs/hiker-dts` — 海阔视界 API 类型声明
 - `hiker://docs/source-formats` — 基于 361 真实规则分析的原生源格式参考
-- `hiker://docs/save-format` — 「一行大 JSON」导入与 pageList↔pages 转化详解
+- `hiker://docs/save-format` — 「一行大 JSON」导入与 pages（子页面）序列化详解
 
 > 写源参考已由「官方帮助手册 + 写源模板手册 + 视频源写源模板」完整覆盖，可直接让 AI 按模板生成。
 

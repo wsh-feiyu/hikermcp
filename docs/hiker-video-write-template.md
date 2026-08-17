@@ -12,7 +12,7 @@
 
 ## 一、总览：一个规则由什么组成
 
-海阔视界的一个规则 = **顶层 JSON 配置** + **若干子页面模块（pageList）**。顶层配置决定规则的入口、样式、搜索方式；子页面模块是真正的 JS 代码，负责渲染首页、搜索、详情、播放。
+海阔视界的一个规则 = **顶层 JSON 配置** + **若干子页面模块（pages）**。顶层配置决定规则的入口、样式、搜索方式；子页面模块是真正的 JS 代码，负责渲染首页、搜索、详情、播放。
 
 ```
 顶层 JSON  →  find_rule  →  子页面模块【规则名】→  setResult(d)
@@ -23,7 +23,7 @@
 > 子页面模块名 **取规则名本身**（如规则名「某某影视」→ 模块名「某某影视」），
 > 不要照抄模板示例模块名（hmhome/hmys 是旧示例名，不是通用名）。
 > 模块名出现的位置**必须全部一致**：顶层 `find_rule`/`searchFind` 里的
-> `$.require("X")`、`pageList[].path`、模块内互相调用 `$.require("X")`。
+> `$.require("X")`、`pages` 中的 `path`、模块内互相调用 `$.require("X")`。
 >
 > **核心理解：** 顶层 JSON 的 `find_rule` / `searchFind` 只是「入口指针」，真正干活的是 `$.require("规则名").函数()` 指向的子页面模块代码。所以写源的核心 = 写一个结构良好的模块对象，并在顶层 JSON 里正确引用它。
 
@@ -61,7 +61,7 @@
   "class_url": "",               // 分类 ID（可选，& 分隔）
 
   // ---- 子页面模块（必填，否则无代码可执行）----
-  "pageList": [
+  "pages": [
     {
       "name": "主页",              // 页面显示名
       "path": "规则名",            // ★ 模块名 = 规则标题（如「某某影视」），必须与 $.require("规则名") 一致
@@ -72,7 +72,7 @@
 }
 ```
 
-> ⚠️ **易错点：** ① `pageList[].path` 必须与 `find_rule` / `searchFind` 里的 `$.require("X")` 完全一致；② 子页面 `rule` 必须以 `//js:` 开头、被引用模块必须以 `$.exports = ...` 结尾；③ 顶层缺 `url` / `col_type` / `find_rule` 会显示「纯搜索小程序」。
+> ⚠️ **易错点：** ① `pages` 中的 `path` 必须与 `find_rule` / `searchFind` 里的 `$.require("X")` 完全一致；② 子页面 `rule` 必须以 `//js:` 开头、被引用模块必须以 `$.exports = ...` 结尾；③ 顶层缺 `url` / `col_type` / `find_rule` 会显示「纯搜索小程序」。
 
 ---
 
@@ -191,10 +191,10 @@ $.require('tools').anyTool(d, param);
 
 ### 4.3 顶层 JSON 注册工具子页面
 
-工具子页面与主页模块一样，必须注册进 `pageList`，否则 `$.require("tools")` 加载不到。
+工具子页面与主页模块一样，必须注册进 `pages`，否则 `$.require("tools")` 加载不到。
 
 ```jsonc
-"pageList": [
+"pages": [
   { "name": "主页", "path": "规则名", "col_type": "movie_3", "rule": "//js:\n..." },  // ★ path = 规则标题
   { "name": "工具", "path": "tools", "col_type": "movie_3", "rule": "//js:\n..." }  // ★ 工具子页面（固定名 tools）
 ]
@@ -581,7 +581,7 @@ play: function (video_id, vod_map_id, collection) {
 | # | 检查项 | 错误后果 |
 |---|--------|----------|
 | 1 | 顶层有 `url` / `col_type` / `find_rule` | 缺失 → 纯搜索小程序 |
-| 2 | `pageList[].path` 与 `$.require("X")` 一致；**X = 规则名本身**（勿用 hmhome/hmys 等示例名） | 不一致 → 模块加载失败 |
+| 2 | `pages` 中的 `path` 与 `$.require("X")` 一致；**X = 规则名本身**（勿用 hmhome/hmys 等示例名） | 不一致 → 模块加载失败 |
 | 3 | 子页面 `rule` 以 `//js:` 开头 | 缺 → App 不识别为 JS |
 | 4 | 被引用模块以 `$.exports = ...` 结尾 | 缺 → 加载不到导出 |
 | 5 | 每个列表项含 `title` / `img` / `col_type` / `url` | 缺 → 卡片渲染异常 |
@@ -590,7 +590,7 @@ play: function (video_id, vod_map_id, collection) {
 | 8 | 跨页传参用 `putMyVar` / `getMyVar` | 不用 → 参数丢失 |
 | 9 | 工具子页面 `path` 与 `$.require("X")` 一致 | 不一致 → 调用报 undefined |
 | 10 | 工具函数在导出对象中（`$.exports = {fn}`） | 漏导出 → 调用报 undefined |
-| 11 | `pageList` 包含所有被引用的子页面 | 漏注册 → `$.require` 加载失败 |
+| 11 | `pages` 包含所有被引用的子页面 | 漏注册 → `$.require` 加载失败 |
 | 12 | 主页模块 home() 中存在 `setPreResult(d_)` 和 `setResult(d)` | 缺一 → 导航/列表不显示 |
 | 13 | 详情页 `play()` 返回字符串地址 | 不返回 → 无法播放 |
 | 14 | 多线路选集用 `storage0.putMyVar('lists', lists)` 存储全部线路 | 不存 → 切换线路无数据 |

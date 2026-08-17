@@ -17,7 +17,7 @@ const DOCS_DIR = path.join(__dirname, '..', '..', 'docs');
  *   qingdou-skill   青豆 SKILL（仅写青豆规则时参考）
  *   hiker-dts       API 类型声明
  *   source-formats  原生源格式参考
- *   save-format     一行大 JSON 导入与 pageList↔pages 转化
+ *   save-format     一行大 JSON 导入与 pages 转化
  *   suggestions     代码片段建议
  */
 
