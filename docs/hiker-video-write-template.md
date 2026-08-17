@@ -15,11 +15,17 @@
 海阔视界的一个规则 = **顶层 JSON 配置** + **若干子页面模块（pageList）**。顶层配置决定规则的入口、样式、搜索方式；子页面模块是真正的 JS 代码，负责渲染首页、搜索、详情、播放。
 
 ```
-顶层 JSON  →  find_rule  →  子页面模块 hmhome  →  setResult(d)
-入口/样式      js:$.require("hmhome").home()   home/search/detail/play   渲染列表到 App
+顶层 JSON  →  find_rule  →  子页面模块【规则名】→  setResult(d)
+入口/样式      js:$.require("规则名").home()   home/search/detail/play   渲染列表到 App
 ```
 
-> **核心理解：** 顶层 JSON 的 `find_rule` / `searchFind` 只是「入口指针」，真正干活的是 `$.require("模块名").函数()` 指向的子页面模块代码。所以写源的核心 = 写一个结构良好的模块对象，并在顶层 JSON 里正确引用它。
+> **★ 模块命名规则（AI 必须遵守）：**
+> 子页面模块名 **取规则名本身**（如规则名「某某影视」→ 模块名「某某影视」），
+> 不要照抄模板示例名（hmhome/hmys 是河马影视的模块名，不是通用名）。
+> 模块名出现的位置**必须全部一致**：顶层 `find_rule`/`searchFind` 里的
+> `$.require("X")`、`pageList[].path`、模块内互相调用 `$.require("X")`。
+>
+> **核心理解：** 顶层 JSON 的 `find_rule` / `searchFind` 只是「入口指针」，真正干活的是 `$.require("规则名").函数()` 指向的子页面模块代码。所以写源的核心 = 写一个结构良好的模块对象，并在顶层 JSON 里正确引用它。
 
 ---
 
@@ -42,11 +48,11 @@
   "col_type": "movie_2",        // 列表卡片样式
   "detail_col_type": "movie_3",  // 详情页样式
   "sdetail_col_type": "movie_1", // 二级详情样式
-  "find_rule": "js:$.require(\"hmhome\").home()", // ★ 主页数据来源：调用模块函数
+  "find_rule": "js:$.require(\"规则名\").home()", // ★ 主页数据来源：调用模块函数；【规则名】= 规则标题（如「某某影视」），勿用示例名
 
   // ---- 搜索（可选，但搜索源必须有）----
   "search_url": "hiker://empty?page=fypage&kw=**", // 搜索入口，** = 关键词占位
-  "searchFind": "js:putMyVar('keyword', getParam('kw'));$.require(\"hmhome\").search()", // ★ 搜索逻辑
+  "searchFind": "js:putMyVar('keyword', getParam('kw'));$.require(\"规则名\").search()", // ★ 搜索逻辑，模块名与 find_rule 一致
 
   // ---- 可选增强 ----
   "ua": "mobile",                 // 请求 UA（不写则用默认）
@@ -58,7 +64,7 @@
   "pageList": [
     {
       "name": "主页",              // 页面显示名
-      "path": "hmhome",            // ★ 模块名，必须与 $.require("hmhome") 一致
+      "path": "规则名",            // ★ 模块名 = 规则标题（如「某某影视」），必须与 $.require("规则名") 一致
       "col_type": "movie_3",      // 该页卡片样式
       "rule": "//js:\n...完整模块代码..." // ★ 必须以 //js: 开头，$.exports 结尾
     }
@@ -76,11 +82,11 @@
 
 ```javascript
 // ============================================================
-// 模块名：hmhome（主页模块）
-// 被 $.require("hmhome") 引用，必须以 $.exports 导出
+// 模块名：【规则名】（主页模块）★ 规则名 = 规则标题，如「某某影视」
+// 被 $.require("规则名") 引用，必须以 $.exports 导出
 // ============================================================
 
-const 模块名 = {
+const 规则名 = {   // ★ const 后的名字 = 规则标题；下方 $.exports = 规则名 保持一致
 
   // ========== ① 数据区：页面渲染的容器 ==========
   d: [],        // 主数据数组：列表项，最终 setResult(d) 渲染
@@ -117,7 +123,7 @@ const 模块名 = {
       url: $('hiker://empty?#immersiveTheme##fypage').rule((v) => {
         // 点击卡片 → 存参数 → 跳详情
         putMyVar('vod_id', v.id);
-        $.require("模块名").detail();
+        $.require("规则名").detail();   // ★ 模块名 = 规则标题
       }, v),
       extra: { vod_id: v.id } // 附加数据
     };
@@ -130,7 +136,7 @@ const 模块名 = {
   play: function (id, map_id, collection) { /* 播放页：返回播放地址 */ },
 };
 
-$.exports = 模块名;  // ★ 必须导出，否则 $.require 加载不到
+$.exports = 规则名;  // ★ 必须导出（导出名与 const 名一致），否则 $.require 加载不到
 ```
 
 > **为什么这样分 5 块？** 数据区（d/d_）是所有页面共用的容器；配置区集中管理站点参数，改域名/换密钥只动一处；工具函数区避免重复代码；数据解析区保证列表项格式统一；页面函数区是 App 的入口，每个函数对应一个页面。
@@ -175,7 +181,7 @@ $.exports = {
 ### 4.2 从主模块调用工具
 
 ```javascript
-// 主模块（hmhome）中调用工具子页面
+// 主模块（规则名）中调用工具子页面
 // 请求接口（复用通用请求封装）
 var data = $.require("tools").request(host + '获取数据接口', { id: id });
 
@@ -189,8 +195,8 @@ $.require('tools').anyTool(d, param);
 
 ```jsonc
 "pageList": [
-  { "name": "主页", "path": "hmhome", "col_type": "movie_3", "rule": "//js:\n..." },
-  { "name": "工具", "path": "tools", "col_type": "movie_3", "rule": "//js:\n..." }  // ★ 工具子页面
+  { "name": "主页", "path": "规则名", "col_type": "movie_3", "rule": "//js:\n..." },  // ★ path = 规则标题
+  { "name": "工具", "path": "tools", "col_type": "movie_3", "rule": "//js:\n..." }  // ★ 工具子页面（固定名 tools）
 ]
 ```
 
@@ -377,7 +383,7 @@ detail: function () {
     // 选集点击 lazyRule：解析编码（vid$ji$index），调用 play()
     var lazy = $('').lazyRule((input) => {
       var parts = String(input).split('$');
-      return $.require("模块名").play(parts[1], parts[2], parts[3]);
+      return $.require("规则名").play(parts[1], parts[2], parts[3]);
     });
 
     // ⑧b 排序切换（正序/倒序）
@@ -545,8 +551,8 @@ play: function (video_id, vod_map_id, collection) {
 |-----|------|------|
 | `setResult(d)` | 渲染主列表 | `setResult(d)` |
 | `setPreResult(d_)` | 渲染预加载内容（导航/loading） | `setPreResult(d_)` |
-| `$.require("模块")` | 加载子页面模块 | `$.require("hmhome").home()` |
-| `$.exports = obj` | 导出模块（必须） | `$.exports = hmys` |
+| `$.require("模块")` | 加载子页面模块（模块名 = 规则名） | `$.require("某某影视").home()` |
+| `$.exports = obj` | 导出模块（必须） | `$.exports = 某某影视` |
 | `putMyVar(k, v)` | 存会话变量（跨页面传参） | `putMyVar('vod_id', id)` |
 | `getMyVar(k, def)` | 读会话变量 | `getMyVar('vod_id', '')` |
 | `setItem(k, v)` | 持久化存储（重启不丢） | `setItem('host', url)` |
@@ -575,7 +581,7 @@ play: function (video_id, vod_map_id, collection) {
 | # | 检查项 | 错误后果 |
 |---|--------|----------|
 | 1 | 顶层有 `url` / `col_type` / `find_rule` | 缺失 → 纯搜索小程序 |
-| 2 | `pageList[].path` 与 `$.require("X")` 一致 | 不一致 → 模块加载失败 |
+| 2 | `pageList[].path` 与 `$.require("X")` 一致；**X = 规则名本身**（勿用 hmhome/hmys 等示例名） | 不一致 → 模块加载失败 |
 | 3 | 子页面 `rule` 以 `//js:` 开头 | 缺 → App 不识别为 JS |
 | 4 | 被引用模块以 `$.exports = ...` 结尾 | 缺 → 加载不到导出 |
 | 5 | 每个列表项含 `title` / `img` / `col_type` / `url` | 缺 → 卡片渲染异常 |

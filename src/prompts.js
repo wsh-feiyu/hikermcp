@@ -75,9 +75,12 @@ export function registerPrompts(server) {
 2.5 ★★★ 视频源/视频小程序一律**优先使用 video-template 模块化框架**：
    调用 \`get_rule_docs({ doc: 'video-template' })\` 完整读取「视频源写源模板」
    （第一次写视频源必须读），并**严格按其框架组织规则**——
-   顶层 JSON 入口 + \`\$.require("模块名")\` 引用 + 子页面模块（hmhome）五区块
+   顶层 JSON 入口 + \`\$.require("规则名")\` 引用 + 子页面模块（规则名）五区块
    （d/d_ 数据区、配置区、工具函数区、数据解析区、home/search/detail/play 页面函数区）、
    多线路用 tabs/lists、选集用 \`$\` 编码 + lazyRule 调 play()。
+   ★ 子页面模块名 **取规则名本身**（规则名「某某影视」→ 模块名「某某影视」），
+   不要使用模板示例名（hmhome/hmys）；\`find_rule\`/\`searchFind\`/\`pageList[].path\`/
+   模块内 \`\$.require\` 引用必须全部一致。
    写完对照模板第 9 节「20 项检查清单」自查。不要用极简骨架糊视频源。
 3. 写完后必须调用 \`validate_rule\` 校验（会检查 setResult/return 混用等软警告）。
 4. 遇到模板覆盖不了的写法（加密、签名、特殊 API），结合手册第 9 节反例清单与官方帮助手册推理，
