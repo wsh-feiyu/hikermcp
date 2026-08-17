@@ -16,9 +16,7 @@
 | `get_js_plugin` | 获取 JS 插件代码 |
 | `save_js_plugin` | 保存 JS 插件 |
 | `format_js_code` | 格式化 JS 插件代码 |
-| `list_examples` | 列出内置示例规则（examples/ 目录可选，缺失时返回提示） |
-| `get_example_rule` | 读取示例规则（可指定子页面；examples/ 目录缺失时返回提示） |
-| `get_rule_docs` | 读取规则编写文档（hiker-help 官方手册 / blueprint 模板手册 等） |
+| `get_rule_docs` | 读取规则编写文档（hiker-help 官方手册 / blueprint 模板手册 / video-template 视频源模板 等） |
 | `get_connection_status` | 查看当前连接状态 |
 
 ### 官方文档体系（写源参考顺序）
@@ -26,6 +24,7 @@
 |------|------------------|------|
 | **官方帮助手册** | `hiker-help` | App 内置开发者手册整合：JS API / 链接协议 / 选择器 / col_type 字典 / 标识 / 网页桥接 —— **通用标准** |
 | **写源模板手册** | `blueprint` | 基于 361 条真实规则实证的模板：主页/分类/二级/详情/解析怎么写 —— **AI 写源必读** |
+| **视频源写源模板** | `video-template` | 模块化框架（顶层 JSON + 子页面模块 + 多线路选集），**复杂/多线路视频源专用** |
 | API 类型声明 | `hiker-dts` | hiker.d.ts 全部引擎 API |
 | 原生源格式参考 | `source-formats` | 基于 361 真实规则分析的格式参考 |
 | 青豆框架指南 | `qingdou-guide` | ★ 仅写青豆规则（var Rule 风格）时参考 |
@@ -36,6 +35,7 @@
 ### Resources（资源，AI 按需读取）
 - `hiker://docs/hiker-help` — **官方帮助手册**（App 内置开发者手册整合：JS API/链接协议/选择器/col_type/标识/网页桥接）
 - `hiker://docs/source-blueprint` — **写源模板手册（AI 写源必读）**
+- `hiker://docs/video-template` — **视频源写源模板**（模块化框架 + 多线路选集，复杂视频源专用）
 - `hiker://docs/qingdou-guide` — 青豆框架规则编写指南（仅写青豆规则时参考）
 - `hiker://docs/qingdou-skill` — 青豆 SKILL 文档（仅写青豆规则时参考）
 - `hiker://docs/suggestions` — 代码片段建议
@@ -43,7 +43,7 @@
 - `hiker://docs/source-formats` — 基于 361 真实规则分析的原生源格式参考
 - `hiker://docs/save-format` — 「一行大 JSON」导入与 pageList↔pages 转化详解
 
-> 本项目不内置示例规则（examples/ 目录可选）。写源参考已由「官方帮助手册 + 写源模板手册」完整覆盖，可直接让 AI 按模板生成。
+> 写源参考已由「官方帮助手册 + 写源模板手册 + 视频源写源模板」完整覆盖，可直接让 AI 按模板生成。
 
 ### Prompts（提示词）
 - `create_rule` — 引导 AI 编写新规则（强制先读官方帮助手册 + 模板手册，再照抄模板）
@@ -213,7 +213,7 @@ hiker-mcp/
 │   └── tools/
 │       ├── rules.js      # 规则工具
 │       ├── js-plugins.js # JS 插件工具
-│       ├── examples.js   # 示例与文档工具（examples/ 目录可选，缺失自动容错）
+│       ├── examples.js   # 规则文档工具（get_rule_docs，读官方帮助/模板）
 │       └── format.js     # 格式化与校验
 ├── docs/                 # 官方帮助手册整合、写源模板手册、青豆框架文档与 hiker.d.ts
 ├── test/                 # 测试（stdio + HTTP 双模式）

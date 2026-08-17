@@ -114,22 +114,10 @@ test('Streamable HTTP 模式完整会话测试', { timeout: 15000 }, async () =>
       init.sessionId
     );
     const toolsMsg = parseData(tools.text);
-    assert.ok(toolsMsg.result.tools.length >= 13, '应列出全部工具');
+    assert.ok(toolsMsg.result.tools.length >= 11, '应列出全部工具');
+    assert.ok(!toolsMsg.result.tools.some((t) => t.name === 'list_examples'), '示例工具已移除');
 
-    // 4. tools/call: list_examples（examples 目录可缺失，验证工具正常返回文本）
-    const ex = await post(
-      {
-        jsonrpc: '2.0',
-        id: 3,
-        method: 'tools/call',
-        params: { name: 'list_examples', arguments: {} },
-      },
-      init.sessionId
-    );
-    const exMsg = parseData(ex.text);
-    assert.ok(typeof exMsg.result.content[0].text === 'string', 'list_examples 应返回文本');
-
-    // 4.5 tools/call: get_rule_docs（官方帮助手册）
+    // 4. tools/call: get_rule_docs（官方帮助手册）
     const docs = await post(
       {
         jsonrpc: '2.0',

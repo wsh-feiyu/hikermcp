@@ -87,12 +87,14 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     const expected = [
       'list_rules', 'get_rule', 'save_rule', 'validate_rule', 'format_rule_code',
       'list_js_plugins', 'get_js_plugin', 'save_js_plugin', 'format_js_code',
-      'list_examples', 'get_example_rule', 'get_rule_docs', 'get_connection_status',
+      'get_rule_docs', 'get_connection_status',
     ];
     for (const name of expected) {
       assert.ok(names.includes(name), `工具 ${name} 应存在`);
     }
     assert.equal(names.length, expected.length, '工具数量应精确匹配');
+    assert.ok(!names.includes('list_examples'), '示例工具已移除');
+    assert.ok(!names.includes('get_example_rule'), '示例工具已移除');
 
     // 3. 列出资源
     const res = await client.request('resources/list');
@@ -100,11 +102,8 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     assert.ok(uris.includes('hiker://docs/hiker-help'), '官方帮助手册资源应存在');
     assert.ok(uris.includes('hiker://docs/qingdou-guide'), '青豆指南资源应存在');
     assert.ok(uris.includes('hiker://docs/source-blueprint'), '写源模板手册资源应存在');
+    assert.ok(uris.includes('hiker://docs/video-template'), '视频源模板资源应存在');
     assert.ok(uris.includes('hiker://docs/hiker-dts'), 'hiker.d.ts 资源应存在');
-    // examples 目录为可选（可缺失），存在时检查示例资源
-    if (uris.some((u) => u.startsWith('hiker://examples/'))) {
-      assert.ok(uris.includes('hiker://examples/河马影视'), '河马影视示例资源应存在');
-    }
 
     // 4. 格式化代码
     const fmt = await client.request('tools/call', {
@@ -113,14 +112,7 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     });
     assert.ok(fmt.result.content[0].text.includes('setResult(d)'), '格式化应输出规范代码');
 
-    // 5. 列出示例规则（examples 目录可缺失，不应报错）
-    const ex = await client.request('tools/call', {
-      name: 'list_examples',
-      arguments: {},
-    });
-    assert.ok(typeof ex.result.content[0].text === 'string', 'list_examples 应返回文本');
-
-    // 6. 读取官方帮助手册（hiker-help，通用标准）
+    // 5. 读取官方帮助手册（hiker-help，通用标准）
     const docs = await client.request('tools/call', {
       name: 'get_rule_docs',
       arguments: { doc: 'hiker-help' },
@@ -128,7 +120,7 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     assert.ok(docs.result.content[0].text.length > 1000, '官方帮助手册应较长');
     assert.ok(docs.result.content[0].text.includes('setResult'), '官方帮助手册应包含 setResult');
 
-    // 6.5 读取写源模板手册（blueprint，AI 写源必读）
+    // 5.5 读取写源模板手册（blueprint，AI 写源必读）
     const bp = await client.request('tools/call', {
       name: 'get_rule_docs',
       arguments: { doc: 'blueprint' },
@@ -136,18 +128,15 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     assert.ok(bp.result.content[0].text.includes('setResult(d)'), '模板手册应包含 setResult 说明');
     assert.ok(bp.result.content[0].text.includes('find_rule'), '模板手册应包含 find_rule');
 
-    // 7. 读取示例规则的指定页面（examples 目录可缺失；存在时验证页面读取）
-    const page = await client.request('tools/call', {
-      name: 'get_example_rule',
-      arguments: { name: '河马影视', page: 'tools' },
+    // 5.6 读取视频源写源模板
+    const vt = await client.request('tools/call', {
+      name: 'get_rule_docs',
+      arguments: { doc: 'video-template' },
     });
-    if (page.result.isError) {
-      assert.ok(page.result.content[0].text.includes('示例规则不存在') || page.result.content[0].text.includes('页面不存在'), '示例缺失时应给出友好提示');
-    } else {
-      assert.ok(page.result.content[0].text.includes('createProxy'), '应包含 createProxy 函数');
-    }
+    assert.ok(vt.result.content[0].text.includes('setResult(d)'), '视频模板应包含 setResult 说明');
+    assert.ok(vt.result.content[0].text.includes('$.exports'), '视频模板应包含 $.exports 导出说明');
 
-    // 8. 校验规则（新链路：序列化干跑）
+    // 6. 校验规则（新链路：序列化干跑）
     const vr = await client.request('tools/call', {
       name: 'validate_rule',
       arguments: {
@@ -162,7 +151,7 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     assert.ok(vr.result.content[0].text.includes('校验通过'), '简单规则应校验通过');
     assert.ok(vr.result.content[0].text.includes('序列化干跑'), '应包含序列化干跑信息');
 
-    // 9. 校验有问题的规则
+    // 7. 校验有问题的规则
     const vr2 = await client.request('tools/call', {
       name: 'validate_rule',
       arguments: { rule: { title: '坏规则', find_rule: 'js:var x = ;' } },

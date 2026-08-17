@@ -3,21 +3,19 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const EXAMPLES_DIR = path.join(__dirname, '..', 'examples');
 const DOCS_DIR = path.join(__dirname, '..', 'docs');
 
 /**
- * MCP Resources：让 AI 按需读取规则编写文档与示例规则。
+ * MCP Resources：让 AI 按需读取规则编写文档。
  *
  * URI 约定：
  *   hiker://docs/hiker-help          官方帮助手册（App 内置开发者手册整合：JS API/链接协议/选择器/col_type/标识/网页桥接）
  *   hiker://docs/source-blueprint    写源模板手册（AI 写源必读，通用标准）
+ *   hiker://docs/video-template      视频源写源模板（模块化框架，复杂视频源专用）
  *   hiker://docs/qingdou-guide       青豆框架规则编写指南（仅写青豆规则时参考）
  *   hiker://docs/qingdou-skill       青豆 SKILL 文档（仅写青豆规则时参考）
  *   hiker://docs/suggestions         代码片段建议
  *   hiker://docs/hiker-dts           海阔视界 API 类型声明
- *   hiker://examples/<name>          示例规则
- *   hiker://examples/<name>/<page>   示例规则的某个子页面
  */
 
 function readFileSafe(p) {
@@ -86,6 +84,13 @@ export function registerResources(server) {
       file: 'source-blueprint.md',
       mime: 'text/markdown',
     },
+    {
+      uri: 'hiker://docs/video-template',
+      name: '视频源写源模板（模块化框架）',
+      description: '基于河马影视公共框架提取：顶层 JSON + 子页面模块（hmhome）组织方式、多线路选集 tabs/lists、动态线路/排序切换、play() 播放解析、20 项检查清单。复杂/多线路视频源专用；轻量源用 blueprint 极简模板',
+      file: 'hiker-video-write-template.md',
+      mime: 'text/markdown',
+    },
   ];
 
   for (const d of docs) {
@@ -93,27 +98,6 @@ export function registerResources(server) {
       const content = readFileSafe(path.join(DOCS_DIR, d.file)) || '';
       return {
         contents: [{ uri: d.uri, text: content, mimeType: d.mime }],
-      };
-    });
-  }
-
-  // 示例规则资源（examples 目录可选，缺失时跳过）
-  let exampleFiles = [];
-  try {
-    exampleFiles = fs
-      .readdirSync(EXAMPLES_DIR)
-      .filter((f) => f.endsWith('.json'))
-      .map((f) => f.replace(/\.json$/, ''));
-  } catch {
-    // examples 目录不存在 → 不注册示例资源
-  }
-
-  for (const name of exampleFiles) {
-    const uri = `hiker://examples/${name}`;
-    server.resource(`示例规则：${name}`, uri, async () => {
-      const content = readFileSafe(path.join(EXAMPLES_DIR, `${name}.json`)) || '{}';
-      return {
-        contents: [{ uri, text: content, mimeType: 'application/json' }],
       };
     });
   }
