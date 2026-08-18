@@ -87,7 +87,7 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     const expected = [
       'list_rules', 'get_rule', 'save_rule', 'validate_rule', 'format_rule_code',
       'list_js_plugins', 'get_js_plugin', 'save_js_plugin', 'format_js_code',
-      'get_rule_docs', 'get_connection_status', 'export_rule_json',
+      'get_rule_docs', 'get_connection_status', 'export_rule_json', 'share_rule_paste',
       'remember_lesson', 'recall_lessons', 'list_lessons', 'forget_lesson',
     ];
     for (const name of expected) {
@@ -96,7 +96,6 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     assert.equal(names.length, expected.length, '工具数量应精确匹配');
     assert.ok(!names.includes('list_examples'), '示例工具已移除');
     assert.ok(!names.includes('get_example_rule'), '示例工具已移除');
-    assert.ok(!names.includes('share_rule_paste'), '云剪贴板工具已停用（注释）');
 
     // 3. 列出资源
     const res = await client.request('resources/list');
