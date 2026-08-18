@@ -71,6 +71,10 @@ export function registerPrompts(server) {
 0. **通用标准文档（必须）**：调用 \`get_rule_docs({ doc: 'hiker-help' })\` 读取「官方帮助手册」——
    App 内置开发者手册整合：setResult 系列、JS API、链接协议、选择器、链接标识、col_type 官方字典。
    这是**唯一通用标准**。官方标准文档包括：hiker-help（官方帮助手册）、blueprint（写源模板手册）、hiker-dts（API 声明）。
+0.5 ★ 查 API 的正确姿势（hiker.d.ts 有 80KB，严禁整篇读取）：
+   - 先用 \`get_rule_docs({ doc: 'hiker-api-index' })\` 看 API 索引（9KB，180 个名称+用途）定位函数名
+   - 再用 \`get_rule_docs({ doc: 'hiker-dts', keyword: '函数名' })\` 精准提取该 API 的声明片段
+   - 不要不带 keyword 直接读 hiker-dts 全文；需要多 API 时逐个用 keyword 提取
 1. **模板手册（必须）**：调用 \`get_rule_docs({ doc: 'blueprint' })\` 完整读取「海阔视界写源模板手册」。
    这是基于 361 条真实规则实证提炼的权威模板：主页/分类/搜索/二级/详情/播放解析怎么写、
    数据怎么返回（setResult(d) vs return）、全部字段字典、各类型模板、反例清单。

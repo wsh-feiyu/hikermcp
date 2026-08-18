@@ -138,6 +138,31 @@ test('MCP Server 完整功能测试', { timeout: 10000 }, async () => {
     assert.ok(vt.result.content[0].text.includes('setResult(d)'), '视频模板应包含 setResult 说明');
     assert.ok(vt.result.content[0].text.includes('$.exports'), '视频模板应包含 $.exports 导出说明');
 
+    // 5.7 API 索引（小而全，先看索引定位 API 名）
+    const idx = await client.request('tools/call', {
+      name: 'get_rule_docs',
+      arguments: { doc: 'hiker-api-index' },
+    });
+    assert.ok(idx.result.content[0].text.includes('base64Encode'), 'API 索引应含 base64Encode');
+
+    // 5.8 hiker-dts 用 keyword 精准提取（不读全文）
+    const dts = await client.request('tools/call', {
+      name: 'get_rule_docs',
+      arguments: { doc: 'hiker-dts', keyword: 'startProxyServer' },
+    });
+    assert.ok(dts.result.content[0].text.includes('startProxyServer'), '应提取到 startProxyServer 声明');
+    assert.ok(dts.result.content[0].text.includes('已只返回命中上下文'), '应提示为精准提取');
+    // 全文长度应远小于 d.ts 全文（80KB）
+    assert.ok(dts.result.content[0].text.length < 10000, `keyword 提取应只返回片段，实际 ${dts.result.content[0].text.length}`);
+
+    // 5.9 keyword 未命中应提示
+    const miss = await client.request('tools/call', {
+      name: 'get_rule_docs',
+      arguments: { doc: 'hiker-dts', keyword: '不存在的API名xyz' },
+    });
+    assert.ok(miss.result.isError, '未命中应返回错误');
+    assert.ok(miss.result.content[0].text.includes('没有匹配'), '应提示未匹配');
+
     // 6. 校验规则（新链路：序列化干跑）
     const vr = await client.request('tools/call', {
       name: 'validate_rule',

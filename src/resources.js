@@ -59,9 +59,16 @@ export function registerResources(server) {
     {
       uri: 'hiker://docs/hiker-dts',
       name: '海阔视界 API 类型声明',
-      description: 'hiker.d.ts：海阔视界 JS 引擎全部 API 的类型声明（fetch/post/parseDom/setResult 等）',
+      description: 'hiker.d.ts：海阔视界 JS 引擎全部 API 的类型声明。★大文件（80KB），先用 hiker-api-index 索引定位 API 名，再用 get_rule_docs({doc:"hiker-dts", keyword:"函数名"}) 精准提取',
       file: 'hiker.d.ts',
       mime: 'text/typescript',
+    },
+    {
+      uri: 'hiker://docs/hiker-api-index',
+      name: '海阔视界 API 速查索引',
+      description: 'hiker.d.ts 全部 180 个 API 的名称速查表（函数/常量/命名空间 + 一句话用途，9KB）。★查 API 先看此索引定位函数名，再按名精准提取 d.ts 声明',
+      file: 'hiker-api-index.md',
+      mime: 'text/markdown',
     },
     {
       uri: 'hiker://docs/source-formats',
