@@ -71,13 +71,6 @@ export function registerResources(server) {
       mime: 'text/markdown',
     },
     {
-      uri: 'hiker://docs/source-formats',
-      name: '海阔视界原生源格式参考',
-      description: '基于 361 个真实规则分析的原生源格式参考：视频源/漫画源/资讯源/图片源/音乐源/阅读源/直播源/工具源/综合源写法，col_type 布局体系，find_rule 三种格式，hiker:// 协议 API，MCP 写源模板',
-      file: 'source-formats.html',
-      mime: 'text/html',
-    },
-    {
       uri: 'hiker://docs/save-format',
       name: '规则「一行大 JSON」导入与转化详解',
       description: 'pages 子页面规范（//js: 前缀 + $.exports 导出）、一行大 JSON 导入与转化、主页源必填字段、两种保存通道（MCP save_rule vs curl 直连 App）的入参差异、常见问题排查',

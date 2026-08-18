@@ -16,7 +16,7 @@ const DOCS_DIR = path.join(__dirname, '..', '..', 'docs');
  *   qingdou-guide   青豆框架规则编写指南（仅写青豆规则时参考）
  *   qingdou-skill   青豆 SKILL（仅写青豆规则时参考）
  *   hiker-dts       API 类型声明
- *   source-formats  原生源格式参考
+ *   hiker-api-index API 速查索引
  *   save-format     一行大 JSON 导入与 pages 转化
  *   suggestions     代码片段建议
  */
@@ -27,7 +27,7 @@ export function registerExampleTools(server) {
     'get_rule_docs',
     '获取海阔视界规则编写文档。★大文档（如 hiker-dts 80KB）务必带 keyword 精准提取，不要一次读全文：先看 hiker-api-index 索引定位 API 名，再 get_rule_docs({doc:"hiker-dts", keyword:"函数名"})',
     {
-      doc: z.string().optional().describe('文档名：hiker-help(官方帮助手册) / blueprint(写源模板手册，AI写源必读) / video-template(视频源写源模板) / qingdou-guide / qingdou-skill(青豆专用) / hiker-dts(API类型声明，80KB 大文件，必须配 keyword 使用) / hiker-api-index(API速查索引，9KB 先看这个定位函数名) / source-formats / save-format / suggestions'),
+      doc: z.string().optional().describe('文档名：hiker-help(官方帮助手册) / blueprint(写源模板手册，AI写源必读) / video-template(视频源写源模板) / qingdou-guide / qingdou-skill(青豆专用) / hiker-dts(API类型声明，80KB 大文件，必须配 keyword 使用) / hiker-api-index(API速查索引，9KB 先看这个定位函数名) / save-format / suggestions'),
       keyword: z.string().optional().describe('可选。只返回文档中包含该关键词的行及其上下文（前后各 contextLines 行），避免一次读大文档。空格分隔多词表示「同时包含」'),
       contextLines: z.number().int().min(0).max(20).optional().describe('关键词命中行前后各返回的行数，默认 3'),
     },
@@ -41,7 +41,6 @@ export function registerExampleTools(server) {
         suggestions: 'suggestions.js',
         'hiker-dts': 'hiker.d.ts',
         'hiker-api-index': 'hiker-api-index.md',
-        'source-formats': 'source-formats.html',
         'save-format': 'save-format.md',
       };
       const file = map[doc];

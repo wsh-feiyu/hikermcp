@@ -39,7 +39,6 @@
 | **视频源写源模板** | `video-template` | 模块化框架（顶层 JSON + 子页面模块 + 多线路选集），**★ 写视频源/视频小程序优先使用** |
 | API 类型声明 | `hiker-dts` | hiker.d.ts 全部引擎 API（80KB，配 keyword 精准提取） |
 | API 速查索引 | `hiker-api-index` | 180 个 API 名称+用途速查表（9KB，先看这个定位函数名） |
-| 原生源格式参考 | `source-formats` | 基于 361 真实规则分析的格式参考 |
 | 青豆框架指南 | `qingdou-guide` | ★ 仅写青豆规则（var Rule 风格）时参考 |
 | 青豆 SKILL | `qingdou-skill` | ★ 仅写青豆规则时参考 |
 | 代码片段建议 | `suggestions` | 编辑器内置补全建议 |
@@ -54,7 +53,6 @@
 - `hiker://docs/suggestions` — 代码片段建议
 - `hiker://docs/hiker-dts` — 海阔视界 API 类型声明（80KB，配 keyword 精准提取）
 - `hiker://docs/hiker-api-index` — API 速查索引（180 个 API 名称+用途，先看这个）
-- `hiker://docs/source-formats` — 基于 361 真实规则分析的原生源格式参考
 - `hiker://docs/save-format` — 「一行大 JSON」导入与 pages（子页面）序列化详解
 
 > 写源参考已由「官方帮助手册 + 写源模板手册 + 视频源写源模板」完整覆盖，可直接让 AI 按模板生成。

@@ -347,5 +347,61 @@ JS 里 `fy_bridge_app.getUrls()`（字符串）/`window._getUrls()`（数组）�
 
 ---
 
+## 14. 外部 JS 源加载模式
+
+大量社区规则把实际解析逻辑放在**外部 JS 文件**，数据库规则只保留加载入口。三种常见框架：
+
+### 14.1 drpy / hipy_t3 格式（TVBox 风格，兼容）
+每个源是独立 JS 文件，导出 `parse`（列表/首页）与 `play`（详情/播放）：
+
+```js
+var rule = {
+  title: '源名称', host: 'https://example.com',
+  url: '/vodshow/fyclass-fyid-fypage.html',
+  searchUrl: '/vodsearch/**/fypage.html',
+  searchable: 2, quickSearch: 0, filterable: 0,
+  class_name: '电影&电视剧', class_url: '1&2',
+  headers: { 'User-Agent': 'MOBILE_UA' }, timeout: 5000,
+  parse: function (html) {           // 首页/列表：pdfa/pdfh/pd 解析
+    var list = pdfa(html, 'body&&.module-item'); var result = [];
+    list.forEach(function (item) {
+      result.push({ title: pdfh(item, 'img&&alt'), desc: pdfh(item, '.module-item-text&&Text'),
+        pic_url: pd(item, '.lazy&&data-src'), url: pd(item, 'a&&href') });
+    });
+    return result;
+  },
+  play: function (html) { return pd(html, 'iframe&&src'); }  // 详情/播放
+};
+```
+
+### 14.2 TyrantG 外部 JS 模式
+JS 文件存放于 `hiker://files/rules/` 目录，数据库规则只剩加载入口：
+
+```js
+// 数据库 find_rule
+js:
+eval(fetch("hiker://files/rules/TyrantG/LIVE/douyu.js"));
+baseParse();
+// 外部文件示例: hiker://files/rules/TyrantG/LIVE/douyu.js
+```
+
+### 14.3 远程依赖加载模式（大型聚合规则）
+通过 `preRule` 动态加载远程 JS 库（配合 `require` / 版本号缓存 / `initConfig`）：
+
+```js
+// prerule 示例：GitHub 远程库 + 代理
+let ghproxy = $.require('ghproxy').getproxy();
+for (let i = 0; i < ghproxy.length; i++) {
+  try { require(ghproxy[i] + 'https://raw.githubusercontent.com/xxx/hk/master/JyRequire.js'); break; }
+  catch (e) { }
+}
+initConfig({ 依赖: srcHome });
+```
+
+> 注意：远程文件更新时，同一地址软件不会重新下载——给链接加 `?v=1` 版本号强制刷新；
+> 修改版本号会无视缓存时间直接更新（见 2.8 模块引用）。
+
+---
+
 > 文档整理基于 App 内置开发者手册（version 1），实际行为以 App 为准。
 > 配套阅读：《写源模板手册》(doc: blueprint)——怎么组织规则；本手册——官方 API/协议标准。
