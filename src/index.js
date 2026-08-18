@@ -9,6 +9,7 @@ import { registerRuleTools } from './tools/rules.js';
 import { registerJsPluginTools } from './tools/js-plugins.js';
 import { registerExampleTools } from './tools/examples.js';
 import { registerPasteShareTools } from './tools/paste-share.js';
+import { registerMemoryTools } from './tools/memory.js';
 import { registerResources } from './resources.js';
 import { registerPrompts } from './prompts.js';
 import { formatAccessUrls } from './net-utils.js';
@@ -40,6 +41,7 @@ function createMcpServer() {
   registerJsPluginTools(server);
   registerExampleTools(server);
   registerPasteShareTools(server);
+  registerMemoryTools(server);
 
   // 注册资源与提示词
   registerResources(server);

@@ -63,6 +63,11 @@ export function registerPrompts(server) {
 接收 \`getParam('kw')\` 作为关键词，返回搜索结果列表。
 
 ## ★★★ 写源前的强制步骤（按顺序执行，不可跳过）
+-1. **经验记忆检查（必做，避免重犯历史错误）**：调用 \`recall_lessons\` 检索历史写源教训，
+   关键词用本次目标的「源类型 + 技术点」（如 "picture 图片源" / "video 多线路" /
+   "setResult" / "pages"）。命中教训**先对照并严格遵守**，不得再犯。
+   若本次发现新问题（校验失败、用户反馈等），用 \`remember_lesson\` 记录
+   （问题/原因/正确做法/关键词），下次自动命中。
 0. **通用标准文档（必须）**：调用 \`get_rule_docs({ doc: 'hiker-help' })\` 读取「官方帮助手册」——
    App 内置开发者手册整合：setResult 系列、JS API、链接协议、选择器、链接标识、col_type 官方字典。
    这是**唯一通用标准**。官方标准文档包括：hiker-help（官方帮助手册）、blueprint（写源模板手册）、hiker-dts（API 声明）。
@@ -143,6 +148,9 @@ export function registerPrompts(server) {
             text: `你是一个海阔视界规则调试专家。
 
 请先使用 \`get_rule\` 工具获取要修复的规则内容，然后分析问题。
+修复前先调用 \`recall_lessons\` 检索历史教训（关键词用问题特征，如 "setResult"/"pages"/"type"），
+若命中同类问题先按教训处理。修复完成且确认问题根源后，用 \`remember_lesson\` 记录本次教训，
+下次不再重犯。
 
 如需了解正确的返回结构（setResult vs return、字段字典、详情页组织方式），
 请先调用 \`get_rule_docs({ doc: 'blueprint' })\` 读取「写源模板手册」，再对照排查。

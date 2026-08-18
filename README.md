@@ -19,6 +19,17 @@
 | `get_rule_docs` | 读取规则编写文档（hiker-help 官方手册 / blueprint 模板手册 / video-template 视频源模板 等） |
 | `get_connection_status` | 查看当前连接状态 |
 | `export_rule_json` | 未连接 App 时，把规则导出为 JSON 文本（一行大 JSON 复制粘贴 / 美化版存 .json 文件）导入手机 |
+| `remember_lesson` | 记录写源经验教训（问题/原因/正确做法/关键词）到本地记忆库，下次自动命中 |
+| `recall_lessons` | 写源前按关键词检索历史教训，避免重复犯错（自动累计命中次数） |
+| `list_lessons` | 列出经验记忆库全部教训 |
+| `forget_lesson` | 按 id 删除一条教训 |
+
+### 经验记忆（AI 不再重犯）
+写源遇到的问题会沉淀到本地记忆库 `memory/lessons.json`（已 gitignore）：
+- **写源前**：AI 自动 `recall_lessons` 检索历史教训（create_rule / fix_rule 流程已内置），命中的教训先对照、不再犯
+- **出问题时**：`remember_lesson` 记录（问题/原因/正确做法/关键词），同问题自动去重更新
+- **管理**：`list_lessons` / `forget_lesson`
+- 命中次数自动累计，高频问题排最前
 
 ### 官方文档体系（写源参考顺序）
 | 文档 | get_rule_docs 选项 | 用途 |

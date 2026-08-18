@@ -114,10 +114,11 @@ test('Streamable HTTP 模式完整会话测试', { timeout: 15000 }, async () =>
       init.sessionId
     );
     const toolsMsg = parseData(tools.text);
-    assert.ok(toolsMsg.result.tools.length >= 12, '应列出全部工具');
+    assert.ok(toolsMsg.result.tools.length >= 16, '应列出全部工具');
     assert.ok(!toolsMsg.result.tools.some((t) => t.name === 'list_examples'), '示例工具已移除');
     assert.ok(toolsMsg.result.tools.some((t) => t.name === 'export_rule_json'), 'JSON 导出工具应存在');
     assert.ok(!toolsMsg.result.tools.some((t) => t.name === 'share_rule_paste'), '云剪贴板工具已停用');
+    assert.ok(toolsMsg.result.tools.some((t) => t.name === 'remember_lesson'), '记忆工具应存在');
 
     // 4. tools/call: get_rule_docs（官方帮助手册）
     const docs = await post(
