@@ -36,7 +36,7 @@
 |------|------------------|------|
 | **官方帮助手册** | `hiker-help` | App 内置开发者手册整合：JS API / 链接协议 / 选择器 / col_type 字典 / 标识 / 网页桥接 —— **通用标准** |
 | **写源模板手册** | `blueprint` | 基于 361 条真实规则实证的模板：主页/分类/二级/详情/解析怎么写 —— **AI 写源必读** |
-| **视频源写源模板** | `video-template` | 模块化框架（顶层 JSON + 子页面模块 + 多线路选集），**★ 写视频源/视频小程序优先使用** |
+| **视频源写源模板** | `video-template` | 渲染通用型（静态分类 + URL 分段传参 + ★采集点），**★ 写视频源/视频小程序优先使用** |
 | API 类型声明 | `hiker-dts` | hiker.d.ts 全部引擎 API（80KB，配 keyword 精准提取） |
 | API 速查索引 | `hiker-api-index` | 180 个 API 名称+用途速查表（9KB，先看这个定位函数名） |
 | 青豆框架指南 | `qingdou-guide` | ★ 仅写青豆规则（var Rule 风格）时参考 |
@@ -47,7 +47,7 @@
 ### Resources（资源，AI 按需读取）
 - `hiker://docs/hiker-help` — **官方帮助手册**（App 内置开发者手册整合：JS API/链接协议/选择器/col_type/标识/网页桥接）
 - `hiker://docs/source-blueprint` — **写源模板手册（AI 写源必读）**
-- `hiker://docs/video-template` — **视频源写源模板**（模块化框架 + 多线路选集，**写视频源优先使用**）
+- `hiker://docs/video-template` — **视频源写源模板**（渲染通用型：静态分类 + URL 分段传参 + ★采集点，**写视频源优先使用**）
 - `hiker://docs/qingdou-guide` — 青豆框架规则编写指南（仅写青豆规则时参考）
 - `hiker://docs/qingdou-skill` — 青豆 SKILL 文档（仅写青豆规则时参考）
 - `hiker://docs/suggestions` — 代码片段建议

@@ -86,8 +86,8 @@ export function registerResources(server) {
     },
     {
       uri: 'hiker://docs/video-template',
-      name: '视频源写源模板（模块化框架）',
-      description: '基于社区视频源公共框架提取：顶层 JSON + 子页面模块组织方式、多线路选集 tabs/lists、动态线路/排序切换、play() 播放解析、20 项检查清单。★写视频源/视频小程序优先使用此框架',
+      name: '视频源写源模板（渲染通用型）',
+      description: '渲染通用型 v3：静态分类(class_name/class_url) + URL 分段传参(##fyclass##fypage / ##**##)，渲染层固定，AI 只在 ★采集点 分析源数据（API/HTML 均可）。★写视频源/视频小程序优先使用此框架',
       file: 'hiker-video-write-template.md',
       mime: 'text/markdown',
     },

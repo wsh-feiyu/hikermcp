@@ -81,16 +81,14 @@ export function registerPrompts(server) {
    **禁止跳过本步**——照抄模板即可，不需要也禁止去外部搜索规则写法。
 2. 按下面「★ 最小规则模板骨架」直接复制，把选择器与 URL 替换为目标站点即可；
    需要更完整写法时再查手册「8. 完整模板集」。
-2.5 ★★★ 视频源/视频小程序一律**优先使用 video-template 模块化框架**：
+2.5 ★★★ 视频源/视频小程序一律**优先使用 video-template 渲染通用型模板**：
    调用 \`get_rule_docs({ doc: 'video-template' })\` 完整读取「视频源写源模板」
    （第一次写视频源必须读），并**严格按其框架组织规则**——
-   顶层 JSON 入口 + \`\$.require("规则名")\` 引用 + 子页面模块（规则名）五区块
-   （d/d_ 数据区、配置区、工具函数区、数据解析区、home/search/detail/play 页面函数区）、
-   多线路用 tabs/lists、选集用 \`$\` 编码 + lazyRule 调 play()。
-   ★ 子页面模块名 **取规则名本身**（规则名「某某影视」→ 模块名「某某影视」），
-   不要使用模板示例名（hmhome/hmys）；\`find_rule\`/\`searchFind\`/pages 中的 path/
-   模块内 \`\$.require\` 引用必须全部一致。
-   写完对照模板第 9 节「20 项检查清单」自查。不要用极简骨架糊视频源。
+   静态分类（class_name/class_url，首项 ID=1）+ URL 分段传参
+   （hiker://empty##fyclass##fypage / ##**##fypage，用 MY_URL.split("##") 取分类/页码/关键词）、
+   渲染层固定（setResult/卡片 push/setTabs/setLists/setDesc 勿改），
+   AI 只在每个 \`★采集点\` 分析源站数据（API 或 HTML）并返回标准对象。
+   写完对照模板第 9 节「12 项检查清单」自查。不要用极简骨架糊视频源。
 3. 写完后必须调用 \`validate_rule\` 校验（会检查 setResult/return 混用等软警告）。
 4. 遇到模板覆盖不了的写法（加密、签名、特殊 API），结合手册第 9 节反例清单与官方帮助手册推理，
    若仍不确定，直接向用户说明需要的信息，不要凭空编造。
