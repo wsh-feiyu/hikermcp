@@ -114,7 +114,7 @@
   // 主页入口：##fyclass##fypage = App 把「当前分类 ## 页码」拼进 URL
   "url": "hiker://empty##fyclass##fypage",
   "col_type": "movie_3",
-  "group": "①影视",
+  "group": "AI影视",
   // ★采集点 0：静态分类数据（AI 分析源后填入，不是固定值！）
   //   class_url(ID) 会替换 url 里的 ##fyclass##，驱动 home/category
   //   首项固定为「首页/推荐」，其 ID 写 1
@@ -300,7 +300,7 @@ d.push({
 //  点击卡片 → @rule 动态规则渲染完整简介（长文不挤版面）
 if (详情.简介) {
     d.push({
-        title: '简介：'.fontcolor("#1e90ff").bold() + 详情.简介.substr(0, 55).small() + '...详情'.fontcolor("red").small(),
+        title:'‘‘’’'+ '简介：'.fontcolor("#1e90ff").bold() + 详情.简介.substr(0, 55).small() + '...详情'.fontcolor("red").small(),
         url: 'hiker://empty##noHistory#' + '\n' + 详情.简介 + '@rule=js:...',
         col_type: 'text_1'
     });
@@ -344,7 +344,7 @@ function setLists(lists, index) {
     for (var j in list) {
         var 选集标题 = list[j];   // AI 给的选集名（如 "第1集"/"01"/"EP01"）
         d.push({
-            title: 选集标题.small(),
+            title: '‘‘’’'+选集标题.small(),
             url: $("#noLoading#").lazyRule(() => {
                 /* ┌──────────────────────────────────┐
                    │ ★采集点：播放地址（详见 6.1）      │
