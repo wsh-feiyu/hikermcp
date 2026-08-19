@@ -11,9 +11,6 @@ import { loadConfig, expandHosts, apiBase } from './config.js';
  *   GET  /getAllRuleTitles          规则标题列表
  *   GET  /getRuleContent?title=xxx  规则内容
  *   POST /saveRule                  保存规则（form-urlencoded）
- *   GET  /getAllJsTitles            JS 插件列表
- *   GET  /getJsContent?name=xxx     JS 插件内容
- *   POST /saveJs                    保存 JS 插件
  */
 
 let currentHost = null;
@@ -135,19 +132,4 @@ export async function saveRule(rule) {
     delete body.pageList;
   }
   return await post('/saveRule', body);
-}
-
-// ============ JS 插件 API ============
-
-export async function getAllJsTitles() {
-  const text = await get('/getAllJsTitles');
-  return JSON.parse(text);
-}
-
-export async function getJsContent(name) {
-  return await get('/getJsContent', { name });
-}
-
-export async function saveJs(name, content) {
-  return await post('/saveJs', { name, content });
 }

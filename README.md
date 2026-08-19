@@ -1,6 +1,6 @@
 # hiker-mcp
 
-海阔视界规则编辑器 MCP Server。让 AI 助手（Claude Desktop / Cursor / Trae / Codex 等）直接读写海阔视界 App 中的规则与 JS 插件。
+海阔视界规则编辑器 MCP Server。让 AI 助手（Claude Desktop / Cursor / Trae / Codex 等）直接读写海阔视界 App 中的规则。
 
 ## 功能
 
@@ -12,11 +12,6 @@
 | `save_rule` | 保存规则到 App（自动序列化 pages） |
 | `validate_rule` | 校验规则结构与 JS 代码语法 |
 | `format_rule_code` | Prettier 格式化规则代码 |
-| `list_js_plugins` | 获取 App 中所有 JS 插件 |
-| `get_js_plugin` | 获取 JS 插件代码 |
-| `save_js_plugin` | 保存 JS 插件 |
-| `format_js_code` | 格式化 JS 插件代码 |
-| `get_rule_docs` | 读取规则编写文档（hiker-help 官方手册 / blueprint 模板手册 / video-template 视频源模板 等） |
 | `get_connection_status` | 查看当前连接状态 |
 | `export_rule_json` | 未连接 App 时，把规则导出为 JSON 文本（一行大 JSON 复制粘贴 / 美化版存 .json 文件）导入手机 |
 | `remember_lesson` | 记录写源经验教训（问题/原因/正确做法/关键词）到本地记忆库，下次自动命中 |
@@ -26,40 +21,12 @@
 
 ### 经验记忆（AI 不再重犯）
 写源遇到的问题会沉淀到本地记忆库 `memory/lessons.json`（已 gitignore）：
-- **写源前**：AI 自动 `recall_lessons` 检索历史教训（create_rule / fix_rule 流程已内置），命中的教训先对照、不再犯
+- **写源前**：AI 自动 `recall_lessons` 检索历史教训（写源流程已内置），命中的教训先对照、不再犯
 - **出问题时**：`remember_lesson` 记录（问题/原因/正确做法/关键词），同问题自动去重更新
 - **管理**：`list_lessons` / `forget_lesson`
 - 命中次数自动累计，高频问题排最前
 
-### 官方文档体系（写源参考顺序）
-| 文档 | get_rule_docs 选项 | 用途 |
-|------|------------------|------|
-| **官方帮助手册** | `hiker-help` | App 内置开发者手册整合：JS API / 链接协议 / 选择器 / col_type 字典 / 标识 / 网页桥接 —— **通用标准** |
-| **写源模板手册** | `blueprint` | 基于 361 条真实规则实证的模板：主页/分类/二级/详情/解析怎么写 —— **AI 写源必读** |
-| **视频源写源模板** | `video-template` | 渲染通用型（静态分类 + URL 分段传参 + ★采集点），**★ 写视频源/视频小程序优先使用** |
-| API 类型声明 | `hiker-dts` | hiker.d.ts 全部引擎 API（80KB，配 keyword 精准提取） |
-| API 速查索引 | `hiker-api-index` | 180 个 API 名称+用途速查表（9KB，先看这个定位函数名） |
-| 青豆框架指南 | `qingdou-guide` | ★ 仅写青豆规则（var Rule 风格）时参考 |
-| 青豆 SKILL | `qingdou-skill` | ★ 仅写青豆规则时参考 |
-| 代码片段建议 | `suggestions` | 编辑器内置补全建议 |
-| 一行大 JSON 详解 | `save-format` | pages（子页面）序列化与导入转化 |
-
-### Resources（资源，AI 按需读取）
-- `hiker://docs/hiker-help` — **官方帮助手册**（App 内置开发者手册整合：JS API/链接协议/选择器/col_type/标识/网页桥接）
-- `hiker://docs/source-blueprint` — **写源模板手册（AI 写源必读）**
-- `hiker://docs/video-template` — **视频源写源模板**（渲染通用型：静态分类 + URL 分段传参 + ★采集点，**写视频源优先使用**）
-- `hiker://docs/qingdou-guide` — 青豆框架规则编写指南（仅写青豆规则时参考）
-- `hiker://docs/qingdou-skill` — 青豆 SKILL 文档（仅写青豆规则时参考）
-- `hiker://docs/suggestions` — 代码片段建议
-- `hiker://docs/hiker-dts` — 海阔视界 API 类型声明（80KB，配 keyword 精准提取）
-- `hiker://docs/hiker-api-index` — API 速查索引（180 个 API 名称+用途，先看这个）
-- `hiker://docs/save-format` — 「一行大 JSON」导入与 pages（子页面）序列化详解
-
-> 写源参考已由「官方帮助手册 + 写源模板手册 + 视频源写源模板」完整覆盖，可直接让 AI 按模板生成。
-
-### Prompts（提示词）
-- `create_rule` — 引导 AI 编写新规则（强制先读官方帮助手册 + 模板手册，再照抄模板）
-- `fix_rule` — 引导 AI 修复规则（先读模板手册对照排查）
+> 写源知识由用户提供的 SKILL 承载（独立于本 MCP 安装），本 MCP 只负责规则的读写、校验、记忆与分享。
 
 ## 安装
 
@@ -188,7 +155,7 @@ npm test
 ```
 
 测试覆盖两种模式：
-- **stdio 模式**：完整 MCP 握手（initialize → initialized → tools/list → resources/list → 工具调用）
+- **stdio 模式**：完整 MCP 握手（initialize → initialized → tools/list → 工具调用）
 - **HTTP 模式**：会话 ID 生成、多请求复用、无会话请求返回 400、DELETE 关闭会话
 
 手动测试 stdio 模式（模拟 MCP 客户端）：
@@ -230,14 +197,17 @@ hiker-mcp/
 │   ├── config.js         # 配置与 IP 段展开
 │   ├── hiker-api.js      # 海阔视界 HTTP API 封装
 │   ├── scan.js           # 独立 IP 扫描脚本
-│   ├── resources.js      # MCP Resources
-│   ├── prompts.js        # MCP Prompts
+│   ├── paste-share.js    # 云分享（云5/云6 剪贴板）
+│   ├── memory.js         # 经验记忆库
+│   ├── appApi.js         # App 写入通道（JSON POST）
+│   ├── ruleNormalize.js  # 规则规范化（pages 统一）
 │   └── tools/
 │       ├── rules.js      # 规则工具
-│       ├── js-plugins.js # JS 插件工具
-│       ├── examples.js   # 规则文档工具（get_rule_docs，读官方帮助/模板）
-│       └── format.js     # 格式化与校验
-├── docs/                 # 官方帮助手册整合、写源模板手册、青豆框架文档与 hiker.d.ts
+│       ├── format.js     # 格式化与校验
+│       ├── saveRule.js   # 保存链路
+│       ├── validateRule.js # 校验链路
+│       ├── paste-share.js # 云分享工具
+│       └── memory.js     # 记忆工具
 ├── test/                 # 测试（stdio + HTTP 双模式）
 └── config/               # 运行配置（mcp.json 实际配置 / mcp.example.json 示例模板，mcp.json 不提交）
 ```
@@ -247,6 +217,7 @@ hiker-mcp/
 - 浏览器插件（hiker-web-edit）通过 `chrome.runtime.sendMessage` 代理请求解决 CORS
 - 本 MCP Server 是 Node.js 进程，无 CORS 限制，直接访问 App 的 HTTP API
 - 两者可共存：插件负责图形化编辑，MCP Server 让 AI 直接读写规则
+- JS 插件（规则插件）的读写已移出本 MCP，由 App 自身或专用工具管理
 
 ## 安全提示
 

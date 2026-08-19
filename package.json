@@ -1,7 +1,7 @@
 {
   "name": "hiker-mcp",
   "version": "0.1.0",
-  "description": "海阔视界规则编辑器 MCP Server：让 AI 助手直接读写海阔视界 App 的规则与 JS 插件",
+  "description": "海阔视界规则编辑器 MCP Server：让 AI 助手直接读写海阔视界 App 的规则",
   "type": "module",
   "main": "src/index.js",
   "bin": {

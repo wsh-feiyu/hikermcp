@@ -114,37 +114,26 @@ test('Streamable HTTP 模式完整会话测试', { timeout: 15000 }, async () =>
       init.sessionId
     );
     const toolsMsg = parseData(tools.text);
-    assert.ok(toolsMsg.result.tools.length >= 17, '应列出全部工具');
+    assert.ok(toolsMsg.result.tools.length >= 12, '应列出全部工具');
     assert.ok(!toolsMsg.result.tools.some((t) => t.name === 'list_examples'), '示例工具已移除');
+    assert.ok(!toolsMsg.result.tools.some((t) => t.name === 'get_rule_docs'), '文档工具已移除');
+    assert.ok(!toolsMsg.result.tools.some((t) => t.name === 'list_js_plugins'), 'JS 插件工具已移除');
     assert.ok(toolsMsg.result.tools.some((t) => t.name === 'export_rule_json'), 'JSON 导出工具应存在');
     assert.ok(toolsMsg.result.tools.some((t) => t.name === 'share_rule_paste'), '云分享工具应存在');
     assert.ok(toolsMsg.result.tools.some((t) => t.name === 'remember_lesson'), '记忆工具应存在');
 
-    // 4. tools/call: get_rule_docs（官方帮助手册）
-    const docs = await post(
-      {
-        jsonrpc: '2.0',
-        id: 31,
-        method: 'tools/call',
-        params: { name: 'get_rule_docs', arguments: { doc: 'hiker-help' } },
-      },
-      init.sessionId
-    );
-    const docsMsg = parseData(docs.text);
-    assert.ok(docsMsg.result.content[0].text.includes('setResult'), '官方帮助手册应包含 setResult');
-
-    // 5. 无会话 ID 的非 initialize 请求 → 400
+    // 4. 无会话 ID 的非 initialize 请求 → 400
     const bad = await post({ jsonrpc: '2.0', id: 4, method: 'tools/list', params: {} });
     assert.equal(bad.status, 400, '无会话的非 initialize 请求应返回 400');
 
-    // 6. DELETE 关闭会话
+    // 5. DELETE 关闭会话
     const del = await fetch(BASE, {
       method: 'DELETE',
       headers: { 'Mcp-Session-Id': init.sessionId },
     });
     assert.equal(del.status, 200, 'DELETE 应返回 200');
 
-    // 7. 关闭后复用会话应失败（400/404）
+    // 6. 关闭后复用会话应失败（400/404）
     const after = await post(
       { jsonrpc: '2.0', id: 5, method: 'tools/list', params: {} },
       init.sessionId

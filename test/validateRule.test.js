@@ -22,7 +22,7 @@ test('validateRule 简单合法规则应通过', async () => {
 // ★ 回归测试：官方 10 个 type 值必须全部放行（曾误拒 music/cartoon/read/picture/news/tool/other）
 test('validateRule 官方 10 个 type 值全部应通过', async () => {
   const official = ['all', 'video', 'music', 'live', 'cartoon', 'read', 'picture', 'news', 'tool', 'other'];
-  assert.deepEqual(RULE_TYPES, official, 'RULE_TYPES 应与官方 hiker.d.ts 枚举一致');
+  assert.deepEqual(RULE_TYPES, official, 'RULE_TYPES 应与官方 type 枚举一致');
   for (const type of official) {
     const r = await validateRule({
       rule: {

@@ -62,9 +62,8 @@ export function validateJsSyntax(code) {
 }
 
 /**
- * 官方 type 枚举（与 hiker.d.ts 的 type 定义、App 内置开发者手册一致）。
- * 来源：docs/hiker.d.ts —— type TYPE<['all','video','music','live','cartoon','read','picture','news','tool','other']>
- * 修改时必须与 hiker.d.ts 同步，防止漂移。
+ * 官方 type 枚举（与 App 内置开发者手册一致）。
+ * 来源：官方 help 文档 —— type TYPE<['all','video','music','live','cartoon','read','picture','news','tool','other']>
  */
 export const RULE_TYPES = ['all', 'video', 'music', 'live', 'cartoon', 'read', 'picture', 'news', 'tool', 'other'];
 
